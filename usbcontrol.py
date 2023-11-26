@@ -43,6 +43,12 @@ def get_args():
                         help='Filter for USB device descriptions (e.g., "Ralink")',
                         default='')
 
+    parser.add_argument('--usb_version',
+                        required=False,
+                        choices=['2.0', '3.2'],
+                        default='3.2',
+                        help='USB controller version to add (2.0 or 3.2)')
+
     args = parser.parse_args()
     password = None
     if args.password is None:
@@ -223,10 +229,10 @@ for host in hosts_in_datacenter:
         if selected_vm is None:
             raise SystemExit(f"VM '{args.vm_name}' not found")
 
-        # Add USB 2.0 Controller
-        # add_usb_controller(selected_vm)
-        # Add USB 3.2 Controller
-        add_usb_3_2_controller(selected_vm)
+        if args.usb_version == '2.0':
+            add_usb_controller(selected_vm)
+        elif args.usb_version == '3.2':
+            add_usb_3_2_controller(selected_vm)
         
 
         for device in selected_vm.config.hardware.device:
